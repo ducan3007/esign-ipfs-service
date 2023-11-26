@@ -15,7 +15,7 @@ import { config } from '@config';
 import { IPFSPublicService, IPFSService } from './ipfs.service';
 import { decodeToken } from 'src/utils/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Response } from 'express';
+import e, { Response } from 'express';
 
 @Controller('file')
 @ApiTags('Public IPFS endpoint')
@@ -74,15 +74,37 @@ export class IpfsController {
   ) {}
 
   @Get('get/:cid')
-  async get(@Param('cid') cid: string) {
+  async getFileBuffer(@Param('cid') cid: string) {
     try {
+      console.log('Dowloading file', cid);
       const file = await this.ipfsService.getFileBuffer(cid);
+      console.log('File', file);
       return file;
     } catch (error) {
       console.log(error);
       return {
         error: "Couldn't download file from IPFS Gateway",
       };
+    }
+  }
+
+  @Post('add-binary')
+  @ApiTags('IPFS add file')
+  async addBinaryFile(
+    @Body() body: any,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    try {
+      console.log('Body', body.file);
+      if (body.file.data) {
+        const file = await this.ipfsService.add(body.file.data);
+        return file;
+      } else {
+        return res.status(400).json({ error: 'Invalid file' }).send();
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: 'Invalid file' }).send();
     }
   }
 }

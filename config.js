@@ -30,7 +30,7 @@ export const config = convict({
 
   KAFKA_BROKERS: {
     doc: 'Kafka brokers',
-    format: Array,
+    format: String,
     default: 'localhost:9093',
     env: 'KAFKA_BROKERS',
   },

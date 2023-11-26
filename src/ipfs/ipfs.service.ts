@@ -26,7 +26,7 @@ export class IPFSService implements OnModuleInit {
   }
 
   async add(file: any) {
-    const fileHash = await this.ipfsClient.add(file.buffer);
+    const fileHash = await this.ipfsClient.add(file);
     return fileHash;
   }
 
@@ -65,6 +65,7 @@ export class IPFSService implements OnModuleInit {
 
   async getFileBuffer(cid: string) {
     const buffer = await this.ipfsClient.cat(cid);
+    console.log('get file Buffer', buffer);
     let fileBuffer = [];
     for await (const chunk of buffer) {
       fileBuffer.push(chunk);

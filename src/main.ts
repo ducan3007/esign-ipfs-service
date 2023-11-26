@@ -18,6 +18,9 @@ async function bootstrap() {
   publicApp.enableCors();
 
   app.useBodyParser('json', { limit: '50mb' });
+  app.useBodyParser('urlencoded', { limit: '50mb' });
+
+  publicApp.useBodyParser('json', { limit: '50mb' });
 
   const sConfig = new DocumentBuilder()
     .setTitle('Cats example')
